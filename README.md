@@ -316,6 +316,5 @@ This project is licensed under the **MIT License**.
 
 ### ⭐ If you find this project interesting, consider giving it a star!
 
-Built with ❤️ for the **Kizuna** ecosystem.
 
 </div>
