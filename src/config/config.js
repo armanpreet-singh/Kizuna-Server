@@ -4,20 +4,14 @@ dotenv.config();
 
 export const config = {
   port: process.env.PORT,
-  nodeEnv: process.env.NODE_ENV,
+  mongoUri: process.env.MONGODB_URI,
+  corsOrigin: process.env.CORS_ORIGIN,
 
-  mongodbUri: process.env.MONGODB_URI,
-  dbName: process.env.DB_NAME,
+  accessTokenSecret: process.env.ACCESS_TOKEN_SECRET,
+  accessTokenExpiry: process.env.ACCESS_TOKEN_EXPIRY,
 
-  clientUrl: process.env.CLIENT_URL,
-
-  jwt: {
-    accessSecret: process.env.ACCESS_TOKEN_SECRET,
-    accessExpiry: process.env.ACCESS_TOKEN_EXPIRY,
-
-    refreshSecret: process.env.REFRESH_TOKEN_SECRET,
-    refreshExpiry: process.env.REFRESH_TOKEN_EXPIRY,
-  },
+  refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
+  refreshTokenExpiry: process.env.REFRESH_TOKEN_EXPIRY,
 
   cloudinary: {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
