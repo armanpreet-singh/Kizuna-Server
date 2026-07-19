@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-
 export const config = {
   port: process.env.PORT,
   mongoUri: process.env.MONGODB_URI,
@@ -12,6 +8,8 @@ export const config = {
 
   refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET,
   refreshTokenExpiry: process.env.REFRESH_TOKEN_EXPIRY,
+
+  nodeEnv: process.env.NODE_ENV || "development",
 
   cloudinary: {
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
