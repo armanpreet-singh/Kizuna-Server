@@ -1,11 +1,10 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
-import { User } from "../models/users.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import { ApiRespone } from "../utils/ApiResponse.js";
+import { User } from "../models/user.model.js";
+import { uploadOnCloudinary } from "../lib/cloudinary.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken"
-import { MongoAPIError } from "mongodb";
-import { Mongoose } from "mongoose";
+
 
 
 const generateAccessAndRefreshTokens = async(userId)=>
@@ -16,7 +15,7 @@ const generateAccessAndRefreshTokens = async(userId)=>
      const refreshToken = user.generateRefreshToken()
     
      user.refreshToken = refreshToken
-     await user.save({validateBeforesave : false})
+     await user.save({validateBeforeSave : false})
 
      return {accessToken,refreshToken}
 
@@ -94,7 +93,7 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   const createdUser = await User.findById(user._id).select(
-    "-passowrd -refreshToken"
+    "--password  -refreshToken"
   );
 
   if (!createdUser) {
@@ -103,7 +102,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
   return res
     .status(201)
-    .json(new ApiRespone(200, createdUser, "✅  User Created Successfully"));
+    .json(new ApiResponse(200, createdUser, "✅  User Created Successfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -149,7 +148,7 @@ return res
 .cookie("accessToken", accessToken, options)
 .cookie("refreshToken", refreshToken, options)
 .json(
-    new ApiRespone(
+    new ApiResponse(
         200,
         {
             user : loggedInUser, accessToken, refreshToken
@@ -181,7 +180,7 @@ return res
 .status(200)
 .clearCookie("accessToken", options)
 .clearCookie("refreshToken", options)
-.json(new ApiRespone(200, {}, "User Logged Out Successfully." ))
+.json(new ApiResponse(200, {}, "User Logged Out Successfully." ))
 
 
 
@@ -221,9 +220,9 @@ const refreshAccessToken = asyncHandler(async(req, res)=>{
   .cookie("accessToken", accessToken, options)
   .cookie("refreshToken", refreshToken, options)
   .json(
-      new ApiRespone(
+      new ApiResponse(
           200,
-          {accessToken, refreshToken : newrefreshToken},
+          {accessToken, refreshToken },
           "🔁  Access Token Refreshed"
       )
   )
@@ -249,7 +248,7 @@ await user.save({validateBeforesave : false})
 
 return res
 .status(200)
-.json(new ApiRespone(200, {}, "Password Changes Successfully"))
+.json(new ApiResponse(200, {}, "Password Changes Successfully"))
 })
 
 const getCurrentUser = asyncHandler(async(req, res)=>{
@@ -259,12 +258,12 @@ return res
 })
 
 const updateAcountDetails = asyncHandler(async(req, res)=>{
-
+const { fullName, email } = req.body;
 if(!fullName || !email){
   throw new ApiError(400, "All Fields Are Required!")
 }
 
-const user = User.findByIdAndDelete(
+const user = User.findByIdAndUpdate(
   req.user?._id,
   {
 $set : {
@@ -278,7 +277,7 @@ $set : {
 
 return res
 .status(200)
-.json(new ApiRespone(200, user, "Account Details Updated Successfully."))
+.json(new ApiResponse(200, user, "Account Details Updated Successfully."))
 
 })
 
@@ -310,7 +309,7 @@ const user = await User.findByIdAndUpdate(
 return res
 .status(200)
 .json(
-  new ApiRespone(200, user, "Avatar Updated Successfully.")
+  new ApiResponse(200, user, "Avatar Updated Successfully.")
 )
 })
 
