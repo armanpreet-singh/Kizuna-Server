@@ -49,16 +49,16 @@ app.get("/", (req, res) => {
   });
 });
 
-import { asyncHandler } from "./utils/asyncHandler.js";
-import { ApiError } from "./utils/ApiError.js";
+// import { asyncHandler } from "./utils/asyncHandler.js";
+// import { ApiError } from "./utils/ApiError.js";
 
-app.get(
-  "/test-error",
-  asyncHandler(async (req, res) => {
-    throw new ApiError(400, "This is a test error");
-  })
-);
+// app.get(
+//   "/test-error",
+//   asyncHandler(async (req, res) => {
+//     throw new ApiError(400, "This is a test error");
+//   })
+// );
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 export default app;

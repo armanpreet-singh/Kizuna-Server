@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt"
 
@@ -29,15 +29,6 @@ const userSchema = new Schema(
       type: String, //stored and called through CLOUDINARY URL
       required: true,
     },
-    coverImage: {
-      type: String, //stored and called through CLOUDINARY URL
-    },
-    watchHistory: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Video",
-      },
-    ],
     password: {
       type: String,
       required: [true, "Password Is Required"],
