@@ -6,6 +6,8 @@ import morgan from "morgan";
 import hpp from "hpp";
 import rateLimit from "express-rate-limit";
 
+import errorHandler from "./middleware/error.middleware.js";
+
 
 const app = express();
 
@@ -46,5 +48,17 @@ app.get("/", (req, res) => {
     message: "Kizuna API is running 🚀",
   });
 });
+
+import { asyncHandler } from "./utils/asyncHandler.js";
+import { ApiError } from "./utils/ApiError.js";
+
+app.get(
+  "/test-error",
+  asyncHandler(async (req, res) => {
+    throw new ApiError(400, "This is a test error");
+  })
+);
+
+app.use(errorHandler);
 
 export default app;
