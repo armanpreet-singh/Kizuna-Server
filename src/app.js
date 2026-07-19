@@ -1,8 +1,11 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
+
 
 const app = express();
+app.use(helmet());
 
 // Middlewares
 app.use(
