@@ -217,7 +217,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
   return res.status(200).json(200, req.user, "Current User Fetched Successfully");
 });
 
-const updateAcountDetails = asyncHandler(async (req, res) => {
+const updateAccountDetails = asyncHandler(async (req, res) => {
   const { fullName, email } = req.body;
   if (!fullName || !email) {
     throw new ApiError(400, "All Fields Are Required!");
@@ -271,6 +271,6 @@ export {
   refreshAccessToken,
   changeCurrentPassword,
   getCurrentUser,
-  updateAcountDetails,
+  updateAccountDetails,
   updateUserAvatar,
 };
