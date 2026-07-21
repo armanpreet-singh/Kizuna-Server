@@ -119,3 +119,6 @@ messages.replyTo > messages.id
 
 notifications.receiver > users.id
 notifications.sender > users.id
+
+messageReactions.message > messages.id
+messageReactions.user > users.id
