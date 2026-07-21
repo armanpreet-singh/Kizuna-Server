@@ -61,3 +61,19 @@ messages [icon: message-square] {
     createdAt Date
     updatedAt Date
 }
+
+attachments [icon: paperclip] {
+    id string pk
+
+    url string
+    publicId string
+
+    fileName string
+    mimeType string
+    fileSize number
+
+    thumbnail string
+    duration number
+
+    createdAt Date
+}
