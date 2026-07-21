@@ -77,3 +77,21 @@ attachments [icon: paperclip] {
 
     createdAt Date
 }
+
+notifications [icon: bell] {
+    id string pk
+
+    receiver ObjectId
+    sender ObjectId
+
+    type string
+
+    title string
+    content string
+
+    referenceId ObjectId
+
+    isRead boolean
+
+    createdAt Date
+}
