@@ -95,3 +95,14 @@ notifications [icon: bell] {
 
     createdAt Date
 }
+
+messageReactions [icon: smile] {
+    id string pk
+
+    message ObjectId
+    user ObjectId
+
+    emoji string
+
+    createdAt Date
+}
