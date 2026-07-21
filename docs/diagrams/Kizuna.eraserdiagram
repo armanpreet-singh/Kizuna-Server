@@ -19,3 +19,24 @@ users [icon: user] {
     createdAt Date
     updatedAt Date
 }
+
+conversations [icon: message-circle] {
+    id string pk
+
+    type string
+    name string
+    description string
+
+    participants ObjectId[]
+
+    groupAdmin ObjectId
+    createdBy ObjectId
+
+    groupAvatar string
+
+    lastMessage ObjectId
+    lastActivity Date
+
+    createdAt Date
+    updatedAt Date
+}
