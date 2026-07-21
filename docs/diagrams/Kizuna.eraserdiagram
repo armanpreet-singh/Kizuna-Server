@@ -116,3 +116,6 @@ messages.conversation > conversations.id
 messages.sender > users.id
 messages.attachments > attachments.id
 messages.replyTo > messages.id
+
+notifications.receiver > users.id
+notifications.sender > users.id
