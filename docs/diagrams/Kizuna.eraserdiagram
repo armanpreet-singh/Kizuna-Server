@@ -40,3 +40,24 @@ conversations [icon: message-circle] {
     createdAt Date
     updatedAt Date
 }
+
+messages [icon: message-square] {
+    id string pk
+
+    conversation ObjectId
+    sender ObjectId
+
+    type string
+    content string
+
+    attachments ObjectId[]
+
+    replyTo ObjectId
+
+    isEdited boolean
+    isDeleted boolean
+    isPinned boolean
+
+    createdAt Date
+    updatedAt Date
+}
