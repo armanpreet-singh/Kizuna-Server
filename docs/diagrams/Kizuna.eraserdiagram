@@ -111,3 +111,8 @@ messageReactions [icon: smile] {
 conversations.participants > users.id
 conversations.groupAdmin > users.id
 conversations.createdBy > users.id
+
+messages.conversation > conversations.id
+messages.sender > users.id
+messages.attachments > attachments.id
+messages.replyTo > messages.id
