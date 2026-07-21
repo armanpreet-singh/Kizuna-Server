@@ -106,3 +106,8 @@ messageReactions [icon: smile] {
 
     createdAt Date
 }
+
+
+conversations.participants > users.id
+conversations.groupAdmin > users.id
+conversations.createdBy > users.id
