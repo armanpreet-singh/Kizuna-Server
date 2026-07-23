@@ -9,4 +9,4 @@ export const PARTICIPANT_LIMITS = Object.freeze({
 });
 
 export const DEFAULT_GROUP_AVATAR =
-  "https://res.cloudinary.com/demo/image/upload/default-group-avatar.png";
+  "https://res.cloudinary.com/aveqwdxd/image/upload/v1783507599/download_n1xlhm.jpg";
