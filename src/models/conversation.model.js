@@ -83,13 +83,13 @@ const conversationSchema = new Schema(
 
 /* ------------------------- Validation Middleware ------------------------- */
 
-conversationSchema.pre("validate", function (next) {
+conversationSchema.pre("validate", function () {
   // Remove duplicate participants
   this.participants = [...new Set(this.participants.map(String))];
 
   if (this.type === CONVERSATION_TYPES.DIRECT) {
     if (this.participants.length !== PARTICIPANT_LIMITS.DIRECT) {
-      return next(new Error("Direct conversations must contain exactly two participants."));
+    throw new Error("Direct conversations must contain exactly two participants.");
     }
 
     // Direct chats don't need these fields
@@ -101,15 +101,15 @@ conversationSchema.pre("validate", function (next) {
 
   if (this.type === CONVERSATION_TYPES.GROUP) {
     if (this.participants.length < PARTICIPANT_LIMITS.GROUP_MIN) {
-      return next(new Error("A group conversation must contain at least two participants."));
+     throw new Error("A group conversation must contain at least two participants.");
     }
 
     if (!this.name || !this.name.trim()) {
-      return next(new Error("Group name is required."));
+      throw new Error("Group name is required.");
     }
 
     if (!this.groupAdmin) {
-      return next(new Error("Group admin is required."));
+     throw new Error("Group admin is required.");
     }
 
     // Ensure the admin is part of the group
@@ -117,12 +117,12 @@ conversationSchema.pre("validate", function (next) {
       (participant) => participant.toString() === this.groupAdmin.toString()
     );
 
-    if (!isAdminParticipant) {
-      return next(new Error("Group admin must be one of the participants."));
-    }
+if (!isAdminParticipant) {
+  throw new Error("Group admin must be one of the participants.");
+}
   }
 
-  next();
+
 });
 
 /* ------------------------------- Indexes -------------------------------- */
