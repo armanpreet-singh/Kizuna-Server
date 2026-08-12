@@ -21,6 +21,41 @@ const createConversation = async ({
     throw new ApiError(404, "Creator not found");
   }
 
+  if (!Array.isArray(participants) || participants.length === 0) {
+    throw new ApiError(400, "Participants are required");
+  }
+
+  // Prevent duplicate direct conversations
+  if (type === "direct") {
+    if (participants.length !== 2) {
+      throw new ApiError(400, "Direct conversations must contain exactly two participants");
+    }
+
+    if (!participants.some((id) => id.toString() === createdBy.toString())) {
+      throw new ApiError(403, "Creator must be one of the participants");
+    }
+
+    const existingConversation = await Conversation.findDirectConversation(
+      participants[0],
+      participants[1]
+    );
+
+    if (existingConversation) {
+      return existingConversation;
+    }
+  }
+
+  // Group creator should be admin
+  if (type === "group") {
+    if (!groupAdmin) {
+      groupAdmin = createdBy;
+    }
+
+    if (!participants.some((id) => id.toString() === createdBy.toString())) {
+      participants.push(createdBy);
+    }
+  }
+
   const conversation = await Conversation.create({
     type,
     participants,
@@ -35,7 +70,7 @@ const createConversation = async ({
 };
 
 const getUserConversations = async (userId) => {
-  const conversations = await Conversation.find({
+  return Conversation.find({
     participants: userId,
   })
     .populate("participants", "username fullName avatar")
@@ -43,8 +78,6 @@ const getUserConversations = async (userId) => {
     .populate("createdBy", "username fullName avatar")
     .populate("lastMessage")
     .sort({ lastActivity: -1 });
-
-  return conversations;
 };
 
 const getConversationById = async (conversationId, userId) => {
@@ -65,9 +98,13 @@ const getConversationById = async (conversationId, userId) => {
 };
 
 const findDirectConversation = async (userOneId, userTwoId) => {
-  return Conversation.findDirectConversation(userOneId, userTwoId)
-    .populate("participants", "username fullName avatar")
-    .populate("lastMessage");
+  const conversation = await Conversation.findDirectConversation(userOneId, userTwoId);
+
+  if (!conversation) {
+    throw new ApiError(404, "Direct conversation not found");
+  }
+
+  return conversation.populate("participants", "username fullName avatar").populate("lastMessage");
 };
 
 export { createConversation, getUserConversations, getConversationById, findDirectConversation };
