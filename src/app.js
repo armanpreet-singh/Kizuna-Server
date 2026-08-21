@@ -6,6 +6,7 @@ import morgan from "morgan";
 import hpp from "hpp";
 import rateLimit from "express-rate-limit";
 
+import "./models/message.model.js";
 import authRouter from "./routes/auth.routes.js";
 import conversationRouter from "./routes/conversation.routes.js";
 
