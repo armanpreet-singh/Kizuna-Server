@@ -104,7 +104,17 @@ const findDirectConversation = async (userOneId, userTwoId) => {
     throw new ApiError(404, "Direct conversation not found");
   }
 
-  return conversation.populate("participants", "username fullName avatar").populate("lastMessage");
+  await conversation.populate([
+    {
+      path: "participants",
+      select: "username fullName avatar",
+    },
+    {
+      path: "lastMessage",
+    },
+  ]);
+
+  return conversation;
 };
 
 export { createConversation, getUserConversations, getConversationById, findDirectConversation };
