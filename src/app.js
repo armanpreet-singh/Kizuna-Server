@@ -7,6 +7,7 @@ import hpp from "hpp";
 import rateLimit from "express-rate-limit";
 
 import "./models/message.model.js";
+import messageRouter from "./routes/message.routes.js";
 import authRouter from "./routes/auth.routes.js";
 import conversationRouter from "./routes/conversation.routes.js";
 
@@ -40,6 +41,7 @@ app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
+app.use("/api/v1/messages", messageRouter);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/conversations", conversationRouter);
 
