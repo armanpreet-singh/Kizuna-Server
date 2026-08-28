@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { verifyJWT } from "../middleware/auth.middleware.js";
+import { upload } from "../middleware/multer.middleware.js";
 import {
   createMessageController,
   getMessagesController,
@@ -13,7 +14,7 @@ const router = Router();
 
 router.use(verifyJWT);
 
-router.post("/", asyncHandler(createMessageController));
+router.post("/", upload.single("attachment"), asyncHandler(createMessageController));
 
 router.get("/:conversationId", asyncHandler(getMessagesController));
 
