@@ -1,4 +1,8 @@
-import { createMessage, getConversationMessages } from "../services/message.service.js";
+import {
+  createMessage,
+  getConversationMessages,
+  editMessage,
+} from "../services/message.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createMessageController = async (req, res) => {
@@ -24,4 +28,16 @@ const getMessagesController = async (req, res) => {
   return res.status(200).json(new ApiResponse(200, messages, "Messages fetched successfully"));
 };
 
-export { createMessageController, getMessagesController };
+const editMessageController = async (req, res) => {
+  const { content } = req.body;
+
+  const message = await editMessage({
+    messageId: req.params.messageId,
+    userId: req.user._id,
+    content,
+  });
+
+  return res.status(200).json(new ApiResponse(200, message, "Message updated successfully"));
+};
+
+export { createMessageController, getMessagesController, editMessageController };
