@@ -94,4 +94,31 @@ const deleteMessage = async ({ messageId, userId }) => {
   return message;
 };
 
-export { createMessage, getConversationMessages, editMessage, deleteMessage };
+const markMessageAsRead = async ({ messageId, userId }) => {
+  const message = await Message.findOne({
+    _id: messageId,
+    deleted: false,
+  });
+
+  if (!message) {
+    throw new ApiError(404, "Message not found");
+  }
+
+  const conversation = await Conversation.findOne({
+    _id: message.conversation,
+    participants: userId,
+  });
+
+  if (!conversation) {
+    throw new ApiError(403, "You are not a participant in this conversation");
+  }
+
+  if (!message.readBy.some((id) => id.toString() === userId.toString())) {
+    message.readBy.push(userId);
+    await message.save();
+  }
+
+  return message;
+};
+
+export { createMessage, getConversationMessages, editMessage, deleteMessage, markMessageAsRead };
