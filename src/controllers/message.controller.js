@@ -5,10 +5,29 @@ import {
   deleteMessage,
   markMessageAsRead,
 } from "../services/message.service.js";
+import { uploadOnCloudinary } from "../lib/cloudinary.js";
+import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const createMessageController = async (req, res) => {
-  const { conversationId, content, messageType, attachment } = req.body;
+  const { conversationId, content, messageType } = req.body;
+
+  let attachment;
+
+  if (req.file) {
+    const uploadedFile = await uploadOnCloudinary(req.file.path);
+
+    if (!uploadedFile) {
+      throw new ApiError(500, "Failed to upload attachment");
+    }
+
+    attachment = {
+      url: uploadedFile.secure_url || uploadedFile.url,
+      publicId: uploadedFile.public_id,
+      fileName: req.file.originalname,
+      mimeType: req.file.mimetype,
+    };
+  }
 
   const message = await createMessage({
     conversationId,
