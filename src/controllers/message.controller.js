@@ -2,6 +2,7 @@ import {
   createMessage,
   getConversationMessages,
   editMessage,
+  deleteMessage,
 } from "../services/message.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -40,4 +41,18 @@ const editMessageController = async (req, res) => {
   return res.status(200).json(new ApiResponse(200, message, "Message updated successfully"));
 };
 
-export { createMessageController, getMessagesController, editMessageController };
+const deleteMessageController = async (req, res) => {
+  const message = await deleteMessage({
+    messageId: req.params.messageId,
+    userId: req.user._id,
+  });
+
+  return res.status(200).json(new ApiResponse(200, message, "Message deleted successfully"));
+};
+
+export {
+  createMessageController,
+  getMessagesController,
+  editMessageController,
+  deleteMessageController,
+};
