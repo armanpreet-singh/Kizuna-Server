@@ -80,6 +80,10 @@ const messageSchema = new Schema(
 );
 
 messageSchema.pre("validate", function () {
+  if (this.deleted) {
+    return;
+  }
+
   if (!this.content && !this.attachment?.url) {
     throw new Error("Message must contain either content or an attachment.");
   }
