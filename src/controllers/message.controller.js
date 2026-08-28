@@ -3,6 +3,7 @@ import {
   getConversationMessages,
   editMessage,
   deleteMessage,
+  markMessageAsRead,
 } from "../services/message.service.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -50,9 +51,19 @@ const deleteMessageController = async (req, res) => {
   return res.status(200).json(new ApiResponse(200, message, "Message deleted successfully"));
 };
 
+const markMessageAsReadController = async (req, res) => {
+  const message = await markMessageAsRead({
+    messageId: req.params.messageId,
+    userId: req.user._id,
+  });
+
+  return res.status(200).json(new ApiResponse(200, message, "Message marked as read"));
+};
+
 export {
   createMessageController,
   getMessagesController,
   editMessageController,
   deleteMessageController,
+  markMessageAsReadController,
 };
