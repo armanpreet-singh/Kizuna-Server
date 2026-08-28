@@ -75,4 +75,23 @@ const editMessage = async ({ messageId, userId, content }) => {
   return message;
 };
 
-export { createMessage, getConversationMessages, editMessage };
+const deleteMessage = async ({ messageId, userId }) => {
+  const message = await Message.findOne({
+    _id: messageId,
+    sender: userId,
+    deleted: false,
+  });
+
+  if (!message) {
+    throw new ApiError(404, "Message not found or you are not the sender");
+  }
+
+  message.deleted = true;
+  message.content = "";
+
+  await message.save();
+
+  return message;
+};
+
+export { createMessage, getConversationMessages, editMessage, deleteMessage };
