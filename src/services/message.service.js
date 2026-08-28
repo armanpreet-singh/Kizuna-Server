@@ -52,4 +52,27 @@ const getConversationMessages = async ({ conversationId, userId }) => {
   return messages;
 };
 
-export { createMessage, getConversationMessages };
+const editMessage = async ({ messageId, userId, content }) => {
+  const message = await Message.findOne({
+    _id: messageId,
+    sender: userId,
+    deleted: false,
+  });
+
+  if (!message) {
+    throw new ApiError(404, "Message not found or you are not the sender");
+  }
+
+  if (!content || !content.trim()) {
+    throw new ApiError(400, "Message content cannot be empty");
+  }
+
+  message.content = content.trim();
+  message.edited = true;
+
+  await message.save();
+
+  return message;
+};
+
+export { createMessage, getConversationMessages, editMessage };
