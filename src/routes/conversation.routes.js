@@ -6,6 +6,7 @@ import {
   getConversation,
   getDirectConversation,
   addParticipantController,
+  removeParticipantController,
 } from "../controllers/conversation.controller.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -20,6 +21,8 @@ router.get("/", asyncHandler(getMyConversations));
 router.get("/direct/:userId", asyncHandler(getDirectConversation));
 
 router.post("/:conversationId/participants", asyncHandler(addParticipantController));
+
+router.delete("/:conversationId/participants/:userId", asyncHandler(removeParticipantController));
 
 router.get("/:conversationId", asyncHandler(getConversation));
 
