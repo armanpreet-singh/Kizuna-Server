@@ -3,6 +3,7 @@ import {
   getUserConversations,
   getConversationById,
   findDirectConversation,
+  addParticipant,
 } from "../services/conversation.service.js";
 
 const createConversationController = async (req, res) => {
@@ -55,4 +56,22 @@ const getDirectConversation = async (req, res) => {
   });
 };
 
-export { createConversationController, getMyConversations, getConversation, getDirectConversation };
+const addParticipantController = async (req, res) => {
+  const { userId } = req.body;
+
+  const conversation = await addParticipant(req.params.conversationId, req.user._id, userId);
+
+  return res.status(200).json({
+    success: true,
+    message: "Participant added successfully",
+    data: conversation,
+  });
+};
+
+export {
+  createConversationController,
+  getMyConversations,
+  getConversation,
+  getDirectConversation,
+  addParticipantController,
+};
