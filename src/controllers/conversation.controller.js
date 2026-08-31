@@ -4,6 +4,7 @@ import {
   getConversationById,
   findDirectConversation,
   addParticipant,
+  removeParticipant,
 } from "../services/conversation.service.js";
 
 const createConversationController = async (req, res) => {
@@ -67,6 +68,19 @@ const addParticipantController = async (req, res) => {
     data: conversation,
   });
 };
+const removeParticipantController = async (req, res) => {
+  const conversation = await removeParticipant(
+    req.params.conversationId,
+    req.user._id,
+    req.params.userId
+  );
+
+  return res.status(200).json({
+    success: true,
+    message: "Participant removed successfully",
+    data: conversation,
+  });
+};
 
 export {
   createConversationController,
@@ -74,4 +88,5 @@ export {
   getConversation,
   getDirectConversation,
   addParticipantController,
+  removeParticipantController,
 };
