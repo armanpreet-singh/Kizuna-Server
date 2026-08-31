@@ -117,4 +117,48 @@ const findDirectConversation = async (userOneId, userTwoId) => {
   return conversation;
 };
 
-export { createConversation, getUserConversations, getConversationById, findDirectConversation };
+const addParticipant = async (conversationId, requesterId, userId) => {
+  const conversation = await Conversation.findById(conversationId);
+
+  if (!conversation) {
+    throw new ApiError(404, "Conversation not found");
+  }
+
+  // Only groups can have members added
+  if (conversation.type !== "group") {
+    throw new ApiError(400, "Members can only be added to group conversations");
+  }
+
+  // Only group admin can add members
+  if (conversation.groupAdmin.toString() !== requesterId.toString()) {
+    throw new ApiError(403, "Only the group admin can add members");
+  }
+
+  // Check whether the user exists
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "User to add not found");
+  }
+
+  // Prevent duplicate participants
+  if (
+    conversation.participants.some((participant) => participant.toString() === userId.toString())
+  ) {
+    throw new ApiError(400, "User is already a participant");
+  }
+
+  conversation.participants.push(userId);
+
+  await conversation.save();
+
+  return conversation;
+};
+
+export {
+  createConversation,
+  getUserConversations,
+  getConversationById,
+  findDirectConversation,
+  addParticipant,
+};
