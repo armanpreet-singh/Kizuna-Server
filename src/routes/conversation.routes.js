@@ -10,7 +10,9 @@ import {
   leaveGroupController,
   changeGroupAdminController,
   updateGroupDetailsController,
+  updateGroupAvatarController,
 } from "../controllers/conversation.controller.js";
+import { upload } from "../middleware/multer.middleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const router = Router();
@@ -34,6 +36,12 @@ router.patch("/:conversationId/admin", asyncHandler(changeGroupAdminController))
 router.patch("/:conversationId", asyncHandler(updateGroupDetailsController));
 
 router.get("/:conversationId", asyncHandler(getConversation));
+
+router.patch(
+  "/:conversationId/avatar",
+  upload.single("avatar"),
+  asyncHandler(updateGroupAvatarController)
+);
 
 
 export default router;
