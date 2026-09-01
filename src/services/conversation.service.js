@@ -1,6 +1,7 @@
 import { Conversation } from "../models/conversation.model.js";
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
+import { uploadOnCloudinary, deleteFromCloudinary } from "../lib/cloudinary.js";
 
 const createConversation = async ({
   type,
@@ -308,6 +309,45 @@ const updateGroupDetails = async (conversationId, requesterId, { name, descripti
   return conversation;
 };
 
+const updateGroupAvatar = async ({ conversationId, userId, file }) => {
+  const conversation = await Conversation.findById(conversationId);
+
+  if (!conversation) {
+    throw new ApiError(404, "Conversation not found");
+  }
+
+  if (conversation.type !== "group") {
+    throw new ApiError(400, "Only group conversations can have an avatar");
+  }
+
+  if (conversation.groupAdmin.toString() !== userId.toString()) {
+    throw new ApiError(403, "Only the group admin can update the group avatar");
+  }
+
+  if (!file) {
+    throw new ApiError(400, "Avatar file is required");
+  }
+
+  const uploadedFile = await uploadOnCloudinary(file.path);
+
+  if (!uploadedFile) {
+    throw new ApiError(500, "Failed to upload group avatar");
+  }
+
+  // Delete the previous custom avatar if one exists
+  if (conversation.groupAvatarPublicId) {
+    await deleteFromCloudinary(conversation.groupAvatarPublicId);
+  }
+
+  conversation.groupAvatar = uploadedFile.secure_url || uploadedFile.url;
+
+  conversation.groupAvatarPublicId = uploadedFile.public_id;
+
+  await conversation.save();
+
+  return conversation;
+};
+
 export {
   createConversation,
   getUserConversations,
@@ -318,4 +358,5 @@ export {
   leaveGroup,
   changeGroupAdmin,
   updateGroupDetails,
+  updateGroupAvatar,
 };
