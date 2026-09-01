@@ -8,6 +8,7 @@ import {
   addParticipantController,
   removeParticipantController,
   leaveGroupController,
+  changeGroupAdminController,
 } from "../controllers/conversation.controller.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -26,6 +27,8 @@ router.post("/:conversationId/participants", asyncHandler(addParticipantControll
 router.delete("/:conversationId/participants/:userId", asyncHandler(removeParticipantController));
 
 router.delete("/:conversationId/leave", asyncHandler(leaveGroupController));
+
+router.patch("/:conversationId/admin", asyncHandler(changeGroupAdminController));
 
 router.get("/:conversationId", asyncHandler(getConversation));
 
