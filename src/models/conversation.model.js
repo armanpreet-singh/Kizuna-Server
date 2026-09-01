@@ -62,6 +62,13 @@ const conversationSchema = new Schema(
       trim: true,
     },
 
+    // Cloudinary public ID for the group avatar
+    groupAvatarPublicId: {
+      type: String,
+      default: null,
+      trim: true,
+    },
+
     // Latest message in this conversation
     lastMessage: {
       type: Schema.Types.ObjectId,
