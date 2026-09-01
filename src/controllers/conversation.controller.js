@@ -6,6 +6,7 @@ import {
   addParticipant,
   removeParticipant,
   leaveGroup,
+  changeGroupAdmin,
 } from "../services/conversation.service.js";
 
 const createConversationController = async (req, res) => {
@@ -93,6 +94,18 @@ const leaveGroupController = async (req, res) => {
   });
 };
 
+const changeGroupAdminController = async (req, res) => {
+  const { userId } = req.body;
+
+  const conversation = await changeGroupAdmin(req.params.conversationId, req.user._id, userId);
+
+  return res.status(200).json({
+    success: true,
+    message: "Group admin changed successfully",
+    data: conversation,
+  });
+};
+
 export {
   createConversationController,
   getMyConversations,
@@ -101,4 +114,5 @@ export {
   addParticipantController,
   removeParticipantController,
   leaveGroupController,
+  changeGroupAdminController,
 };
