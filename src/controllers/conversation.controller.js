@@ -7,6 +7,7 @@ import {
   removeParticipant,
   leaveGroup,
   changeGroupAdmin,
+  updateGroupDetails,
 } from "../services/conversation.service.js";
 
 const createConversationController = async (req, res) => {
@@ -106,6 +107,19 @@ const changeGroupAdminController = async (req, res) => {
   });
 };
 
+const updateGroupDetailsController = async (req, res) => {
+  const conversation = await updateGroupDetails(req.params.conversationId, req.user._id, {
+    name: req.body.name,
+    description: req.body.description,
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Group details updated successfully",
+    data: conversation,
+  });
+};
+
 export {
   createConversationController,
   getMyConversations,
@@ -115,4 +129,5 @@ export {
   removeParticipantController,
   leaveGroupController,
   changeGroupAdminController,
+  updateGroupDetailsController,
 };
