@@ -5,6 +5,7 @@ import {
   findDirectConversation,
   addParticipant,
   removeParticipant,
+  leaveGroup,
 } from "../services/conversation.service.js";
 
 const createConversationController = async (req, res) => {
@@ -82,6 +83,16 @@ const removeParticipantController = async (req, res) => {
   });
 };
 
+const leaveGroupController = async (req, res) => {
+  const conversation = await leaveGroup(req.params.conversationId, req.user._id);
+
+  return res.status(200).json({
+    success: true,
+    message: "You left the group successfully",
+    data: conversation,
+  });
+};
+
 export {
   createConversationController,
   getMyConversations,
@@ -89,4 +100,5 @@ export {
   getDirectConversation,
   addParticipantController,
   removeParticipantController,
+  leaveGroupController,
 };
