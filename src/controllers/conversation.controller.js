@@ -8,6 +8,7 @@ import {
   leaveGroup,
   changeGroupAdmin,
   updateGroupDetails,
+  updateGroupAvatar,
 } from "../services/conversation.service.js";
 
 const createConversationController = async (req, res) => {
@@ -120,6 +121,20 @@ const updateGroupDetailsController = async (req, res) => {
   });
 };
 
+const updateGroupAvatarController = async (req, res) => {
+  const conversation = await updateGroupAvatar({
+    conversationId: req.params.conversationId,
+    userId: req.user._id,
+    file: req.file,
+  });
+
+  return res.status(200).json({
+    success: true,
+    message: "Group avatar updated successfully",
+    data: conversation,
+  });
+};
+
 export {
   createConversationController,
   getMyConversations,
@@ -130,4 +145,5 @@ export {
   leaveGroupController,
   changeGroupAdminController,
   updateGroupDetailsController,
+  updateGroupAvatarController,
 };
