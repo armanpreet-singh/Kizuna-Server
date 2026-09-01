@@ -195,6 +195,39 @@ const removeParticipant = async (conversationId, requesterId, userId) => {
   return conversation;
 };
 
+const leaveGroup = async (conversationId, userId) => {
+  const conversation = await Conversation.findById(conversationId);
+
+  if (!conversation) {
+    throw new ApiError(404, "Conversation not found");
+  }
+
+  if (conversation.type !== "group") {
+    throw new ApiError(400, "Only group conversations can be left");
+  }
+
+  const isParticipant = conversation.participants.some(
+    (participant) => participant.toString() === userId.toString()
+  );
+
+  if (!isParticipant) {
+    throw new ApiError(403, "You are not a participant of this group");
+  }
+
+  // Admin cannot leave until another admin is assigned
+  if (conversation.groupAdmin.toString() === userId.toString()) {
+    throw new ApiError(400, "Group admin cannot leave the group. Transfer admin role first.");
+  }
+
+  conversation.participants = conversation.participants.filter(
+    (participant) => participant.toString() !== userId.toString()
+  );
+
+  await conversation.save();
+
+  return conversation;
+};
+
 export {
   createConversation,
   getUserConversations,
@@ -202,4 +235,5 @@ export {
   findDirectConversation,
   addParticipant,
   removeParticipant,
+  leaveGroup,
 };
