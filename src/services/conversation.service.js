@@ -228,6 +228,50 @@ const leaveGroup = async (conversationId, userId) => {
   return conversation;
 };
 
+const changeGroupAdmin = async (conversationId, requesterId, newAdminId) => {
+  const conversation = await Conversation.findById(conversationId);
+
+  if (!conversation) {
+    throw new ApiError(404, "Conversation not found");
+  }
+
+  if (conversation.type !== "group") {
+    throw new ApiError(400, "Only group conversations can have an admin");
+  }
+
+  // Only current admin can transfer the admin role
+  if (conversation.groupAdmin.toString() !== requesterId.toString()) {
+    throw new ApiError(403, "Only the group admin can change the admin");
+  }
+
+  // Check whether the new admin exists
+  const newAdmin = await User.findById(newAdminId);
+
+  if (!newAdmin) {
+    throw new ApiError(404, "New admin not found");
+  }
+
+  // New admin must already be a group participant
+  const isParticipant = conversation.participants.some(
+    (participant) => participant.toString() === newAdminId.toString()
+  );
+
+  if (!isParticipant) {
+    throw new ApiError(400, "New admin must already be a participant of the group");
+  }
+
+  // Prevent unnecessary admin transfer
+  if (conversation.groupAdmin.toString() === newAdminId.toString()) {
+    throw new ApiError(400, "User is already the group admin");
+  }
+
+  conversation.groupAdmin = newAdminId;
+
+  await conversation.save();
+
+  return conversation;
+};
+
 export {
   createConversation,
   getUserConversations,
@@ -236,4 +280,5 @@ export {
   addParticipant,
   removeParticipant,
   leaveGroup,
+  changeGroupAdmin,
 };
