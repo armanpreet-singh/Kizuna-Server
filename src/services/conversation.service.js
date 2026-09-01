@@ -272,6 +272,42 @@ const changeGroupAdmin = async (conversationId, requesterId, newAdminId) => {
   return conversation;
 };
 
+const updateGroupDetails = async (conversationId, requesterId, { name, description }) => {
+  const conversation = await Conversation.findById(conversationId);
+
+  if (!conversation) {
+    throw new ApiError(404, "Conversation not found");
+  }
+
+  if (conversation.type !== "group") {
+    throw new ApiError(400, "Only group conversations can be updated");
+  }
+
+  if (conversation.groupAdmin.toString() !== requesterId.toString()) {
+    throw new ApiError(403, "Only the group admin can update the group");
+  }
+
+  if (name !== undefined) {
+    if (typeof name !== "string" || !name.trim()) {
+      throw new ApiError(400, "Group name cannot be empty");
+    }
+
+    conversation.name = name.trim();
+  }
+
+  if (description !== undefined) {
+    if (typeof description !== "string") {
+      throw new ApiError(400, "Group description must be a string");
+    }
+
+    conversation.description = description.trim();
+  }
+
+  await conversation.save();
+
+  return conversation;
+};
+
 export {
   createConversation,
   getUserConversations,
@@ -281,4 +317,5 @@ export {
   removeParticipant,
   leaveGroup,
   changeGroupAdmin,
+  updateGroupDetails,
 };
