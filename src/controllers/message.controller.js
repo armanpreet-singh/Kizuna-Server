@@ -4,6 +4,7 @@ import {
   editMessage,
   deleteMessage,
   markMessageAsRead,
+  getUnreadMessageCount,
 } from "../services/message.service.js";
 import { uploadOnCloudinary } from "../lib/cloudinary.js";
 import { ApiError } from "../utils/ApiError.js";
@@ -79,10 +80,22 @@ const markMessageAsReadController = async (req, res) => {
   return res.status(200).json(new ApiResponse(200, message, "Message marked as read"));
 };
 
+const getUnreadMessageCountController = async (req, res) => {
+  const count = await getUnreadMessageCount({
+    conversationId: req.params.conversationId,
+    userId: req.user._id,
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, { count }, "Unread message count fetched successfully"));
+};
+
 export {
   createMessageController,
   getMessagesController,
   editMessageController,
   deleteMessageController,
   markMessageAsReadController,
+  getUnreadMessageCountController,
 };
