@@ -121,4 +121,30 @@ const markMessageAsRead = async ({ messageId, userId }) => {
   return message;
 };
 
-export { createMessage, getConversationMessages, editMessage, deleteMessage, markMessageAsRead };
+const getUnreadMessageCount = async ({ conversationId, userId }) => {
+  const conversation = await Conversation.findOne({
+    _id: conversationId,
+    participants: userId,
+  });
+
+  if (!conversation) {
+    throw new ApiError(404, "Conversation not found");
+  }
+
+  const count = await Message.countDocuments({
+    conversation: conversationId,
+    deleted: false,
+    readBy: { $ne: userId },
+  });
+
+  return count;
+};
+
+export {
+  createMessage,
+  getConversationMessages,
+  editMessage,
+  deleteMessage,
+  markMessageAsRead,
+  getUnreadMessageCount,
+};
