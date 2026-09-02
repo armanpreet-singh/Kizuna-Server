@@ -7,6 +7,7 @@ import {
   editMessageController,
   deleteMessageController,
   markMessageAsReadController,
+  getUnreadMessageCountController,
 } from "../controllers/message.controller.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -15,6 +16,8 @@ const router = Router();
 router.use(verifyJWT);
 
 router.post("/", upload.single("attachment"), asyncHandler(createMessageController));
+
+router.get("/:conversationId/unread", asyncHandler(getUnreadMessageCountController));
 
 router.get("/:conversationId", asyncHandler(getMessagesController));
 
