@@ -27,4 +27,5 @@ router.delete("/:messageId", asyncHandler(deleteMessageController));
 
 router.patch("/:messageId/read", asyncHandler(markMessageAsReadController));
 
+
 export default router;
